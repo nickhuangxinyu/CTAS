@@ -25,8 +25,6 @@ def main():
   dl = DataLoader()
   er = Evaluator()
   train_list, test_list = dl.GetTrainTest('ni', '2019-01-01', '2019-05-10', '2019-05-11', '2019-06-10')
-  print(train_list)
-  print(test_list)
   train_x, train_y = dl.GetListXY(train_list, win = win)
   train_x = preprocessing.scale(train_x)
   print('train x, y shape is %s %s' %(np.shape(train_x), np.shape(train_y)))
