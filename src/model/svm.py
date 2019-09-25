@@ -12,20 +12,25 @@ import time
 train_list = [ 
   #'/running/2019-05-07/ni8888.csv',
   #'/running/2019-05-08/ni8888.csv',
-  '/running/2019-05-10/ni8888.csv',
+  #'/running/2019-05-10/ni8888.csv',
+  '/root/crypto_cache/crypto2019-08-01.log'
 ]
 
 test_list = [ 
-  '/running/2019-05-09/ni8888.csv'
+  '/root/crypto_cache/crypto2019-08-09.log'
+  #'/running/2019-05-09/ni8888.csv'
   #'/running/2019-04-16/ni8888.csv'
   ]
 
-win = 1
 def main():
   dl = DataLoader()
   er = Evaluator()
-  train_list, test_list = dl.GetTrainTest('ni', '2019-01-01', '2019-05-10', '2019-05-11', '2019-06-10')
-  train_x, train_y = dl.GetListXY(train_list, win = win)
+  train_list, test_list = dl.GetTrainTest('ni', '2019-01-01', '2019-01-05', '2019-06-08', '2019-06-10')
+  #train_list, test_list = dl.GetTrainTest('BTCUSDT', '2019-08-01', '2019-08-03', '2019-08-07', '2019-08-09')
+  print(train_list)
+  win = 1
+  train_x, train_y = dl.GetListXY(train_list)
+  train_x = np.reshape(train_x, (len(train_x), -1))
   train_x = preprocessing.scale(train_x)
   print('train x, y shape is %s %s' %(np.shape(train_x), np.shape(train_y)))
   clf = SVC(gamma='auto')
@@ -34,6 +39,7 @@ def main():
   clf.fit(train_x, train_y)
   print('finished fitting svm model, cost %f s' %(time.time()-start_sec))
   test_x, test_y = dl.GetListXY(test_list, win = win)
+  test_x = np.squeeze(test_x, axis=2)
   test_x = preprocessing.scale(test_x)
   pred_y = clf.predict(test_x)
   er.Acc(test_y, pred_y)
